@@ -1,84 +1,103 @@
-import { useState } from 'react'
-import './App.css'
-
-const Persons = ({ persons }) => persons.map(person => <Person key={person.id} person={person} />)
-const Person = ({ person }) => <p>{person.name} {person.number}</p>
-const Filter = ({ filter, handleFilterChange }) => {
-  return (
-    <div>
-      filter shown with <input value={filter} onChange={handleFilterChange} />
-    </div>
-  )
-}
-const PersonForm = ({ handlePersonSubmit, newName, handleNameChange, newNumber, handleNumberChange }) => {
-  return (
-    <form onSubmit={handlePersonSubmit}>
-      <div>
-        name: <input value={newName} onChange={handleNameChange} />
-      </div>
-      <div>
-        number: <input value={newNumber} onChange={handleNumberChange} />
-      </div>
-      <div>
-        <button type="submit">add</button>
-      </div>
-    </form>
-  )
-}
+import { useEffect, useState } from "react";
+import Persons from "./components/Persons";
+import PersonForm from "./components/PersonForm";
+import Filter from "./components/Filter";
+import personService from "./services/persons";
+import "./App.css";
 
 function App() {
-  const [persons, setPersons] = useState([
-    { id: 1, name: 'Arto Hellas', number: '040-123456' },
-    { id: 2, name: 'Ada Lovelace', number: '39-44-5323523' },
-    { id: 3, name: 'Dan Abramov', number: '12-43-234345' },
-    { id: 4, name: 'Mary Poppendieck', number: '39-23-6423122' }
-  ])
+  const [persons, setPersons] = useState([]);
 
-  const [newName, setNewName] = useState('')
-  const [newNumber, setNewNumber] = useState('')
+  useEffect(() => {
+    personService.getAll().then((initialPersons) => {
+      setPersons(initialPersons);
+    });
+  }, []);
+
+  const [newName, setNewName] = useState("");
+  const [newNumber, setNewNumber] = useState("");
 
   const handleNameChange = (event) => {
-    setNewName(event.target.value)
-  }
+    setNewName(event.target.value);
+  };
 
   const handleNumberChange = (event) => {
-    setNewNumber(event.target.value)
-  }
+    setNewNumber(event.target.value);
+  };
 
   const handlePersonSubmit = (event) => {
-    event.preventDefault()
-    if (persons.some(person => person.name === newName)) {
-      alert(`${newName} is already added to phonebook`)
-      return
+    event.preventDefault();
+    const personExists = persons.find((person) => person.name === newName);
+    if (personExists) {
+      const toReplace = window.confirm(
+        `${newName} is already added to phonebook, replace the old number with a new one?`
+      );
+      if (toReplace === false) return;
+      const newPerson = {
+        name: newName,
+        number: newNumber,
+        id: personExists.id,
+      };
+      personService
+        .update(personExists.id, newPerson)
+        .then((returnedPerson) => {
+          setPersons(
+            persons.map((person) =>
+              person.id === returnedPerson.id ? returnedPerson : person
+            )
+          );
+          setNewName("");
+          setNewNumber("");
+        });
+    } else {
+      const newPerson = {
+        name: newName,
+        number: newNumber,
+      };
+      personService.create(newPerson).then((returnedPerson) => {
+        setPersons(persons.concat(returnedPerson));
+        setNewName("");
+        setNewNumber("");
+      });
     }
-    setPersons(persons.concat({ id: persons.length + 1, name: newName, number: newNumber }))
-    setNewName('')
-    setNewNumber('')
-  }
+  };
 
-  const [filter, setFilter] = useState('')
+  const removePersonOf = (toRemovePerson) => {
+    if (window.confirm(`Delete ${toRemovePerson.name}?`) === false) return;
+    personService.remove(toRemovePerson.id).then(() => {
+      setPersons(persons.filter((person) => person.id !== toRemovePerson.id));
+    });
+  };
+
+  const [filter, setFilter] = useState("");
 
   const handleFilterChange = (event) => {
-    setFilter(event.target.value)
-  }
+    setFilter(event.target.value);
+  };
 
   const showPersons =
-    filter === ''
+    filter === ""
       ? persons
-      : persons.filter(person => person.name.toLowerCase().includes(filter.toLowerCase()))
+      : persons.filter((person) =>
+          person.name.toLowerCase().includes(filter.toLowerCase())
+        );
 
   return (
     <div>
       <h2>Phonebook</h2>
       <Filter filter={filter} handleFilterChange={handleFilterChange} />
       <h3>Add a new</h3>
-      <PersonForm handlePersonSubmit={handlePersonSubmit} 
-        newName={newName} handleNameChange={handleNameChange} 
-        newNumber={newNumber} handleNumberChange={handleNumberChange} />
+      <PersonForm
+        handlePersonSubmit={handlePersonSubmit}
+        newName={newName}
+        handleNameChange={handleNameChange}
+        newNumber={newNumber}
+        handleNumberChange={handleNumberChange}
+      />
       <h3>Numbers</h3>
-      <Persons persons={showPersons} />
+      <Persons persons={showPersons} removePersonOf={removePersonOf} />
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
