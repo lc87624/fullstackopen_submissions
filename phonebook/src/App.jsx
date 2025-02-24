@@ -3,6 +3,8 @@ import Persons from "./components/Persons";
 import PersonForm from "./components/PersonForm";
 import Filter from "./components/Filter";
 import personService from "./services/persons";
+import Notification from "./components/Notification";
+import ErrorNotification from "./components/ErrorNotification";
 import "./App.css";
 
 function App() {
@@ -45,9 +47,18 @@ function App() {
             persons.map((person) =>
               person.id === returnedPerson.id ? returnedPerson : person
             )
-          );
+          )
           setNewName("");
           setNewNumber("");
+          setMessage(`Updated ${newName}`);
+          setTimeout(() => {
+            setMessage(null);
+          }, 5000);
+        }).catch(() => {
+          setError(`Information of ${newName} has already been removed from server`);
+          setTimeout(() => {
+            setError(null);
+          }, 5000);
         });
     } else {
       const newPerson = {
@@ -58,6 +69,10 @@ function App() {
         setPersons(persons.concat(returnedPerson));
         setNewName("");
         setNewNumber("");
+        setMessage(`Added ${newName}`);
+        setTimeout(() => {
+          setMessage(null);
+        }, 5000);
       });
     }
   };
@@ -66,6 +81,11 @@ function App() {
     if (window.confirm(`Delete ${toRemovePerson.name}?`) === false) return;
     personService.remove(toRemovePerson.id).then(() => {
       setPersons(persons.filter((person) => person.id !== toRemovePerson.id));
+    }).catch(() => {
+      setError(`Information of ${toRemovePerson.name} has already been removed from server`);
+      setTimeout(() => {
+        setError(null);
+      }, 5000);
     });
   };
 
@@ -82,9 +102,14 @@ function App() {
           person.name.toLowerCase().includes(filter.toLowerCase())
         );
 
+  const [message, setMessage] = useState(null);
+  const [error, setError] = useState(null);
+
   return (
     <div>
       <h2>Phonebook</h2>
+      <ErrorNotification error={error} />
+      <Notification message={message} />
       <Filter filter={filter} handleFilterChange={handleFilterChange} />
       <h3>Add a new</h3>
       <PersonForm
