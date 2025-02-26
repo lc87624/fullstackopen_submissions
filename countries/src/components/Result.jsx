@@ -1,30 +1,21 @@
-const Result = ({ results }) => {
+import CountryInfo from "./CountryInfo";
+import ResultItem from "./ResultItem";
+
+const Result = ({ results, handleShowClick }) => {
   if (results.length > 10) {
     return <div>Too many matches, specify another filter</div>;
   }
   if (results.length === 1) {
-    const result = results[0];
-    console.log(Object.keys(result.languages));
-
-    return (
-      <div>
-        <h1>{result.name}</h1>
-        <p>Capital {result.capital}</p>
-        <p>Area {result.area}</p>
-        <h1>Languages</h1>
-        <ul>
-          {Object.keys(result.languages).map((languagekey) => (
-            <li key={languagekey}>{result.languages[languagekey]}</li>
-          ))}
-        </ul>
-        <img src={result.flags.png} alt={result.flags.alt} height="100" />
-      </div>
-    );
+    return <CountryInfo country={results[0]} />;
   }
   return (
     <div>
-      {results.map((result) => (
-        <div key={result}>{result}</div>
+      {results.map((result, index) => (
+        <ResultItem
+          key={index}
+          result={result}
+          handleShowClick={() => handleShowClick(result)}
+        />
       ))}
     </div>
   );

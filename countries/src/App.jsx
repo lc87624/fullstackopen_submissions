@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import Result from "./components/Result";
+import countryService from "./services/country";
 
 function App() {
   const [query, setQuery] = useState("");
@@ -9,11 +9,9 @@ function App() {
 
   useEffect(() => {
     if (allCountries.length === 0) {
-      axios
-        .get("https://studies.cs.helsinki.fi/restcountries/api/all")
-        .then((resp) => {
-          setAllCountries(resp.data.map((country) => country.name.common));
-        });
+      countryService.getAll().then((respData) => {
+        setAllCountries(respData.map((country) => country.name.common));
+      });
     }
   }, []);
 
@@ -25,19 +23,10 @@ function App() {
         country.toLowerCase().includes(query.toLowerCase())
       );
       if (filteredCountries.length === 1) {
-        axios
-          .get(
-            `https://studies.cs.helsinki.fi/restcountries/api/name/${filteredCountries[0]}`
-          )
-          .then((resp) => {
-            const result = {
-              name: resp.data.name.common,
-              capital: resp.data.capital,
-              area: resp.data.area,
-              languages: resp.data.languages,
-              flags: resp.data.flags,
-            };
-            setResults([result]);
+        countryService
+          .getCountryInfo(filteredCountries[0])
+          .then((countryInfo) => {
+            setResults([countryInfo]);
           });
       } else {
         setResults(filteredCountries);
@@ -49,13 +38,20 @@ function App() {
     const newQuery = e.target.value;
     setQuery(newQuery);
   };
+
+  const handleShowClick = (country) => {
+    countryService.getCountryInfo(country).then((countryInfo) => { 
+      setResults([countryInfo]);
+    });
+  };
+
   return (
     <>
       <div>
         <label>find countries </label>
         <input type="text" value={query} onChange={handleQueryChange} />
       </div>
-      <Result results={results} />
+      <Result results={results} handleShowClick={handleShowClick} />
     </>
   );
 }
