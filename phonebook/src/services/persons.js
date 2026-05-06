@@ -6,7 +6,13 @@ const getAll = () => {
 };
 
 const create = (newPerson) => {
-  return axios.post(baseUrl, newPerson).then((response) => response.data);
+  return axios.post(baseUrl, newPerson).then((response) => {
+    if (response.status === 201) {
+      return response.data;
+    } else {
+      throw new Error(response.data.error);
+    }
+  });
 };
 
 const update = (id, newPerson) => {

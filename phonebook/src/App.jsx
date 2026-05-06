@@ -73,6 +73,12 @@ function App() {
         setTimeout(() => {
           setMessage(null);
         }, 5000);
+      }).catch(error => {
+        const errorMessage = error.response.data.error || "An error occurred";
+        setError(errorMessage);
+        setTimeout(() => {
+          setError(null);
+        }, 5000);
       });
     }
   };
