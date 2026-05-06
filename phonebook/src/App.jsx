@@ -54,8 +54,9 @@ function App() {
           setTimeout(() => {
             setMessage(null);
           }, 5000);
-        }).catch(() => {
-          setError(`Information of ${newName} has already been removed from server`);
+        }).catch(error => {
+          const errorMessage = error.response.data.error || "An error occurred";
+          setError(errorMessage);
           setTimeout(() => {
             setError(null);
           }, 5000);
