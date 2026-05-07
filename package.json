@@ -18,6 +18,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
     "dev": "node --watch index.js",
+    "lint": "eslint .",
     "build:ui": "rm -rf dist && cd ../fullstackopen_submissions/phonebook/ && npm run build --prod && cp -r dist ../../fullstackopen_phonebook_backend/",
     "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push"
   },
@@ -26,5 +27,11 @@
     "express": "^5.2.1",
     "mongoose": "^9.5.0",
     "morgan": "^1.10.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.4",
+    "@stylistic/eslint-plugin": "^5.10.0",
+    "eslint": "^9.39.4",
+    "globals": "^17.6.0"
   }
 }
