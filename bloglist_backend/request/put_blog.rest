@@ -1,0 +1,10 @@
+PUT http://localhost:3003/api/blogs/69fef70a0e1daee6f709cfec
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3R1c2VyIiwiaWQiOiI2OWZkZDU4MjZlOTliMTVhYzEyOWM4NzYiLCJpYXQiOjE3NzgzMTY5NTV9.bPfU6KQm8fSj1zR33l0SAcmdAne7FZrIjVp-xI5JQ14
+
+{
+  "title": "Good Blog",
+  "author": "Chong Liu",
+  "url": "http://example.com/good-blog",
+  "likes": 6
+}

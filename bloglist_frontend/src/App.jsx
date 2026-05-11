@@ -75,6 +75,28 @@ const App = () => {
     }
   }
 
+  const handleClickLike = async (blog) => {
+    try {
+      const updatedBlog = await blogService.update(blog.id, {
+        title: blog.title,
+        author: blog.author,
+        url: blog.url,
+        likes: blog.likes + 1
+      })
+
+      setBlogs(blogs.map(item =>
+        item.id === blog.id ? updatedBlog : item
+      ))
+    } catch (error) {
+      console.error('Error liking blog:', error.response?.data || error.message)
+      setNotificationMessage('Error liking blog: ' + (error.response?.data?.error || error.message))
+      setNotificationType('error')
+      setTimeout(() => {
+        setNotificationMessage(null)
+      }, 5000)
+    }
+  }
+
   const loginForm = () => (
     <div>
       <h2>log in to application</h2>
@@ -129,7 +151,7 @@ const App = () => {
     return (
       <div>
         {blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} />
+          <Blog key={blog.id} blog={blog} handleClickLike={handleClickLike} />
         )}
       </div>
     )
