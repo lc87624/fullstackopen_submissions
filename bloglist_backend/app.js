@@ -12,6 +12,7 @@ const mongoUrl = config.MONGODB_URI
 mongoose.connect(mongoUrl, { family: 4 })
 
 app.use(express.json())
+app.use(middleware.requestLogger)
 app.use('/api/blogs', middleware.userExtractor, blogRouter)
 app.use('/api/users', userRouter)
 app.use('/api/login', loginRouter)
