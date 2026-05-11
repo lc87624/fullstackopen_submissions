@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
+import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -72,7 +73,6 @@ const App = () => {
         setNotificationMessage(null)
       }, 5000)
     }
-
   }
 
   const loginForm = () => (
@@ -107,7 +107,9 @@ const App = () => {
   )
 
   const blogForm = () => (
-    <BlogForm createBlog={createBlog} />
+    <Togglable buttonLabel="new blog">
+      <BlogForm createBlog={createBlog} />
+    </Togglable>
   )
 
   const loginInfo = () => (
