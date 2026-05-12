@@ -97,6 +97,27 @@ const App = () => {
     }
   }
 
+  const handleClickDelete = async (blog) => {
+    if (window.confirm(`Are you sure you want to delete "${blog.title}" by ${blog.author}?`)) {
+      try {
+        await blogService.remove(blog.id)
+        setBlogs(blogs.filter(item => item.id !== blog.id))
+        setNotificationMessage(`Deleted blog "${blog.title}" by ${blog.author}`)
+        setNotificationType('success')
+        setTimeout(() => {
+          setNotificationMessage(null)
+        }, 5000)
+      } catch (error) {
+        console.error('Error deleting blog:', error.response?.data || error.message)
+        setNotificationMessage('Error deleting blog: ' + (error.response?.data?.error || error.message))
+        setNotificationType('error')
+        setTimeout(() => {
+          setNotificationMessage(null)
+        }, 5000)
+      }
+    }
+  }
+
   const loginForm = () => (
     <div>
       <h2>log in to application</h2>
@@ -153,7 +174,11 @@ const App = () => {
     return (
       <div>
         {blogsToShow.map(blog =>
-          <Blog key={blog.id} blog={blog} handleClickLike={handleClickLike} />
+          <Blog key={blog.id} 
+            blog={blog} 
+            user={user}
+            handleClickLike={handleClickLike}
+            handleClickDelete={handleClickDelete} />
         )}
       </div>
     )
