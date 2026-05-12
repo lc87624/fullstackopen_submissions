@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState } from 'react'
 const Blog = ({ blog, user, handleClickLike, handleClickDelete }) => {
   const blogStyle = {
     paddingTop: 10,

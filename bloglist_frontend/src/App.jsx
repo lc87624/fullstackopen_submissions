@@ -174,8 +174,8 @@ const App = () => {
     return (
       <div>
         {blogsToShow.map(blog =>
-          <Blog key={blog.id} 
-            blog={blog} 
+          <Blog key={blog.id}
+            blog={blog}
             user={user}
             handleClickLike={handleClickLike}
             handleClickDelete={handleClickDelete} />
