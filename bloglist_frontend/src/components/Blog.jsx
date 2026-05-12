@@ -14,10 +14,12 @@ const Blog = ({ blog, user, handleClickLike, handleClickDelete }) => {
   const isOwner = blog.user?.username === user?.username
 
   return (
-    <div style={blogStyle}>
-      {blog.title} {blog.author}
+    <div className="blog" style={blogStyle}>
+      <div className="blog-summary">
+        {blog.title} {blog.author}
+      </div>
       <button onClick={() => setVisible(!visible)}>{buttonLabel}</button>
-      <div style={showWhenVisible}>
+      <div className="blog-details" style={showWhenVisible}>
         {blog.url}
         <br/>
         {blog.likes} likes
