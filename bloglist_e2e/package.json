@@ -1,0 +1,15 @@
+{
+  "name": "bloglist-e2e",
+  "version": "1.0.0",
+  "description": "End-to-end tests for the blog list application",
+  "main": "index.js",
+  "scripts": {
+    "test": "playwright test",
+    "test:ui": "playwright test --ui"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.57.0"
+  }
+}
