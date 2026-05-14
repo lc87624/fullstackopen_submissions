@@ -1,4 +1,3 @@
-import { useState } from 'react'
 const Blog = ({ blog, user, handleClickLike, handleClickDelete }) => {
   const blogStyle = {
     paddingTop: 10,
@@ -8,30 +7,28 @@ const Blog = ({ blog, user, handleClickLike, handleClickDelete }) => {
     marginBottom: 5
   }
 
-  const [visible, setVisible] = useState(false)
-  const buttonLabel = visible ? 'hide' : 'view'
-  const showWhenVisible = { display: visible ? '' : 'none' }
   const isOwner = blog.user?.username === user?.username
 
   return (
     <div className="blog" style={blogStyle}>
       <div className="blog-summary">
-        {blog.title} {blog.author}
+        <h2>{blog.author}: {blog.title}</h2>
       </div>
-      <button onClick={() => setVisible(!visible)}>{buttonLabel}</button>
-      <div className="blog-details" style={showWhenVisible}>
-        {blog.url}
+      <div className="blog-details">
+        <a href={blog.url}>{blog.url}</a>
         <br/>
         {blog.likes} likes
-        <button onClick={() => handleClickLike(blog)}>like</button>
+        {user !== null && (
+          <button onClick={() => handleClickLike(blog)}>like</button>
+        )}
         <br/>
-        {blog.user?.name}
+        Added by {blog.user?.name}
         <br/>
         {isOwner && (
           <button onClick={() => handleClickDelete(blog)}>delete</button>
         )}
       </div>
-    </div>
+    </div >
   )
 }
 
