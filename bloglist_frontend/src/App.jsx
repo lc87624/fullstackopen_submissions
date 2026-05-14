@@ -1,11 +1,30 @@
 import { useState, useEffect } from 'react'
-import { Routes, Route, Link, useNavigate, useMatch, Navigate } from 'react-router-dom'
+import { Routes, Route, useNavigate, useMatch, Navigate } from 'react-router-dom'
 import Blog from './components/Blog'
 import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import {
+  AppHeader,
+  BlogList,
+  BlogListItem,
+  BlogListLink,
+  BlogMetaText,
+  BlogTitleText,
+  Brand,
+  Button,
+  GlobalStyle,
+  Main,
+  NavCluster,
+  NavLink,
+  PageShell,
+  SectionHeader,
+  Subtitle,
+  Title,
+  UserBar,
+} from './styles'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -138,13 +157,13 @@ const App = () => {
   )
 
   const logoutButton = () => (
-    <button onClick={() => {
+    <Button onClick={() => {
       window.localStorage.removeItem('loggedBlogAppUser')
       setUser(null)
       navigate('/')
     }}>
       logout
-    </button>
+    </Button>
   )
 
   const blogList = () => {
@@ -153,14 +172,22 @@ const App = () => {
 
     return (
       <div>
-        <h2>blogs</h2>
-        <ul>
+        <SectionHeader>
+          <div>
+            <Title>Blogs</Title>
+            <Subtitle>Collected reading, ordered by the posts your team likes most.</Subtitle>
+          </div>
+        </SectionHeader>
+        <BlogList>
           {blogsToShow.map(blog =>
-            <li key={blog.id}>
-              <Link to={`/blogs/${blog.id}`}>{blog.title} by {blog.author}</Link>
-            </li>
+            <BlogListItem key={blog.id}>
+              <BlogListLink to={`/blogs/${blog.id}`}>
+                <BlogTitleText>{blog.title}</BlogTitleText>
+                <BlogMetaText>by {blog.author} · {blog.likes} likes</BlogMetaText>
+              </BlogListLink>
+            </BlogListItem>
           )}
-        </ul>
+        </BlogList>
       </div>
     )
   }
@@ -185,22 +212,28 @@ const App = () => {
   }
 
   return (
-    <div>
-      <div>
-        <Link style={{ marginRight: '10px' }} to="/">blogs</Link>
-        {user && <Link style={{ marginRight: '10px' }} to="/create">new blog</Link>}
-        {!user && <Link to="/login">login</Link>}
-        {user && logoutButton()}
-      </div>
+    <PageShell>
+      <GlobalStyle />
+      <AppHeader>
+        <Brand to="/">Bloglist</Brand>
+        <NavCluster>
+          <NavLink to="/">blogs</NavLink>
+          {user && <NavLink to="/create">new blog</NavLink>}
+          {!user && <NavLink to="/login">login</NavLink>}
+          {user && logoutButton()}
+        </NavCluster>
+      </AppHeader>
       <Notification message={notificationMessage} type={notificationType} />
-      {user && loginInfo()}
-      <Routes>
-        <Route path="/" element={blogList()} />
-        <Route path="/login" element={!user && <LoginForm handleLogin={handleLogin} />} />
-        <Route path="/blogs/:id" element={blogView()} />
-        <Route path="/create" element={createView()} />
-      </Routes>
-    </div>
+      {user && <UserBar>{loginInfo()}</UserBar>}
+      <Main>
+        <Routes>
+          <Route path="/" element={blogList()} />
+          <Route path="/login" element={!user && <LoginForm handleLogin={handleLogin} />} />
+          <Route path="/blogs/:id" element={blogView()} />
+          <Route path="/create" element={createView()} />
+        </Routes>
+      </Main>
+    </PageShell>
   )
 }
 

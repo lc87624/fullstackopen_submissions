@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Button, Field, Form, Input, Panel, Subtitle, Title } from '../styles'
 
 const LoginForm = ({ handleLogin }) => {
   const [username, setUsername] = useState('')
@@ -15,34 +16,31 @@ const LoginForm = ({ handleLogin }) => {
   }
 
   return (
-    <div>
-      <h2>log in to application</h2>
-      <form onSubmit={onSubmit}>
-        <div>
-          <label>
-            username:
-            <input
-              type="text"
-              name="username"
-              value={username}
-              onChange={({ target }) => setUsername(target.value)}
-            />
-          </label>
-        </div>
-        <div>
-          <label>
-            password:
-            <input
-              type="password"
-              name="password"
-              value={password}
-              onChange={({ target }) => setPassword(target.value)}
-            />
-          </label>
-        </div>
-        <button type="submit">login</button>
-      </form>
-    </div>
+    <Panel>
+      <Title>Log In</Title>
+      <Subtitle>Sign in to add, like, and manage blogs.</Subtitle>
+      <Form onSubmit={onSubmit}>
+        <Field>
+          username:
+          <Input
+            type="text"
+            name="username"
+            value={username}
+            onChange={({ target }) => setUsername(target.value)}
+          />
+        </Field>
+        <Field>
+          password:
+          <Input
+            type="password"
+            name="password"
+            value={password}
+            onChange={({ target }) => setPassword(target.value)}
+          />
+        </Field>
+        <Button type="submit">login</Button>
+      </Form>
+    </Panel>
   )
 }
 

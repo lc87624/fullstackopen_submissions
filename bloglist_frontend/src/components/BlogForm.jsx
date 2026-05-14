@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import { Button, Field, Form, Input, Panel, Subtitle, Title } from '../styles'
+
 const BlogForm = ({ handleCreateBlog }) => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
@@ -17,45 +19,40 @@ const BlogForm = ({ handleCreateBlog }) => {
   }
 
   return (
-    <div>
-      <h2>create new</h2>
-      <form onSubmit={onsubmit}>
-        <div>
-          <label>
-            title:
-            <input
-              type="text"
-              name="title"
-              value={title}
-              onChange={({ target }) => setTitle(target.value)}
-            />
-          </label>
-        </div>
-        <div>
-          <label>
-            author:
-            <input
-              type="text"
-              name="author"
-              value={author}
-              onChange={({ target }) => setAuthor(target.value)}
-            />
-          </label>
-        </div>
-        <div>
-          <label>
-            url:
-            <input
-              type="text"
-              name="url"
-              value={url}
-              onChange={({ target }) => setUrl(target.value)}
-            />
-          </label>
-        </div>
-        <button type="submit">create</button>
-      </form>
-    </div>
+    <Panel>
+      <Title>Create New</Title>
+      <Subtitle>Add a useful link to the shared reading list.</Subtitle>
+      <Form onSubmit={onsubmit}>
+        <Field>
+          title:
+          <Input
+            type="text"
+            name="title"
+            value={title}
+            onChange={({ target }) => setTitle(target.value)}
+          />
+        </Field>
+        <Field>
+          author:
+          <Input
+            type="text"
+            name="author"
+            value={author}
+            onChange={({ target }) => setAuthor(target.value)}
+          />
+        </Field>
+        <Field>
+          url:
+          <Input
+            type="text"
+            name="url"
+            value={url}
+            onChange={({ target }) => setUrl(target.value)}
+          />
+        </Field>
+        <Button type="submit">create</Button>
+      </Form>
+    </Panel>
   )
 }
 
