@@ -15,7 +15,7 @@ describe('Blog', () => {
     }
   }
 
-  test('renders title and author, but not url or likes by default', () => {
+  test('renders title, author, url and likes', () => {
     const { container } = render(
       <Blog
         blog={blog}
@@ -32,29 +32,20 @@ describe('Blog', () => {
     expect(summary).toHaveTextContent(blog.author)
     expect(details).toHaveTextContent(blog.url)
     expect(details).toHaveTextContent(`${blog.likes} likes`)
-    expect(details).not.toBeVisible()
+    expect(details).toBeVisible()
   })
 
-  test('shows url and likes when the view button is clicked', async () => {
-    const user = userEvent.setup()
-
-    const { container } = render(
+  test('does not show the like button when the user is not logged in', () => {
+    render(
       <Blog
         blog={blog}
-        user={{ username: 'testuser' }}
+        user={null}
         handleClickLike={vi.fn()}
         handleClickDelete={vi.fn()}
       />
     )
 
-    const details = container.querySelector('.blog-details')
-    const button = screen.getByText('view')
-
-    await user.click(button)
-
-    expect(details).toBeVisible()
-    expect(details).toHaveTextContent(blog.url)
-    expect(details).toHaveTextContent(`${blog.likes} likes`)
+    expect(screen.queryByText('like')).not.toBeInTheDocument()
   })
 
   test('calls the like handler twice when the like button is clicked twice', async () => {
@@ -70,7 +61,6 @@ describe('Blog', () => {
       />
     )
 
-    await user.click(screen.getByText('view'))
     await user.click(screen.getByText('like'))
     await user.click(screen.getByText('like'))
 
